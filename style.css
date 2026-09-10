@@ -1,0 +1,307 @@
+/* CONFIGURACIÓN BASE */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #fcfbf9;
+    color: #4a3e40;
+    overflow-x: hidden;
+}
+
+/* INTERFAZ DEL SOBRE 3D */
+.pantalla-apertura {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    background: #fcfbf9;
+    background-image: radial-gradient(circle at 50% 50%, rgba(255, 235, 240, 0.6) 0%, rgba(252, 251, 249, 1) 80%);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999;
+    transition: opacity 0.6s ease;
+}
+
+.brillo-flotante {
+    position: absolute; color: #d4af37; font-size: 18px; opacity: 0.3;
+    animation: flotarElegante 4s infinite ease-in-out;
+}
+.b-f1 { top: 20%; left: 20%; animation-delay: 0s; }
+.b-f2 { top: 25%; right: 20%; animation-delay: 1s; }
+.b-f3 { bottom: 25%; left: 25%; animation-delay: 2s; }
+.b-f4 { bottom: 20%; right: 25%; animation-delay: 3s; }
+
+@keyframes flotarElegante {
+    0%, 100% { transform: translateY(0); opacity: 0.2; }
+    50% { transform: translateY(-15px); opacity: 0.6; }
+}
+
+.contenedor-magico { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 8; }
+.brillo-explosion {
+    position: absolute; color: #d4af37; font-size: 20px;
+    transform: translate(-50%, -50%) scale(0);
+    animation: explotarBrillo 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+@keyframes explotarBrillo {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1); opacity: 0; }
+}
+
+.contenedor-sobre { display: flex; flex-direction: column; align-items: center; perspective: 1400px; }
+.sobre {
+    position: relative; width: 290px; height: 185px; background-color: #f3b5c6;
+    border-radius: 0 0 12px 12px; box-shadow: 0 20px 40px rgba(221, 143, 166, 0.25);
+    margin-bottom: 30px; transform-style: preserve-3d; cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.sobre .solapa {
+    position: absolute; top: 0; left: 0; width: 0; height: 0;
+    border-left: 145px solid transparent; border-right: 145px solid transparent;
+    border-top: 100px solid #eaa6ba; transform-origin: top;
+    transition: transform 0.6s ease; z-index: 5;
+}
+.sobre .frente {
+    position: absolute; bottom: 0; left: 0; width: 0; height: 0;
+    border-left: 145px solid #f7c3d1; border-right: 145px solid #f7c3d1;
+    border-bottom: 100px solid #ee9db3; border-top: 85px solid transparent;
+    border-radius: 0 0 12px 12px; z-index: 4;
+}
+.sello-cera {
+    position: absolute; top: 75px; left: 117px; width: 56px; height: 56px;
+    background: radial-gradient(circle, #f5d68a 0%, #cc9f2b 100%);
+    border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    display: flex; justify-content: center; align-items: center; z-index: 6;
+}
+.sello-interior {
+    width: 44px; height: 44px; border: 1px dashed #ffffff; border-radius: 50%;
+    font-family: 'Alex Brush', cursive; font-size: 26px; color: #ffffff;
+    display: flex; justify-content: center; align-items: center;
+}
+.contenido-tarjeta-dentro {
+    position: absolute; top: 10px; left: 15px; width: 260px; height: 155px;
+    background: #ffffff; border-radius: 8px; z-index: 2;
+    display: flex; justify-content: center; align-items: center;
+}
+.iniciales-sobre { font-family: 'Alex Brush', cursive; font-size: 38px; color: #d15680; }
+
+.sobre.abierto .solapa { transform: rotateX(180deg); z-index: 1; }
+.sobre.abierto .sello-cera { opacity: 0; transform: scale(0.6); }
+.sobre.abierto .contenido-tarjeta-dentro { transform: translateY(-60px); }
+
+.txt-indicacion { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: #c5a044; margin-bottom: 6px; }
+.txt-toque { font-size: 11px; letter-spacing: 2px; color: #8a7375; }
+
+/* TRANSICIÓN */
+.fade-out { opacity: 0; pointer-events: none; }
+.invitacion-oculta { opacity: 0; display: none; }
+.fade-in { animation: smoothIn 1s ease forwards; }
+@keyframes smoothIn { from { opacity: 0; } to { opacity: 1; } }
+
+#invitacion-completa {
+    position: relative; width: 100%; min-height: 100vh;
+    background-color: #fcfbf9;
+    background-image: radial-gradient(circle at 20% 20%, rgba(255, 240, 245, 0.8) 0%, transparent 40%),
+                      radial-gradient(circle at 80% 80%, rgba(255, 248, 220, 0.6) 0%, transparent 40%),
+                      linear-gradient(135deg, #fcfbf9 0%, #f4efe6 100%);
+    display: flex; justify-content: center; align-items: flex-start;
+    padding: 60px 20px; overflow-y: auto;
+}
+
+/* MARIPOSAS FLOTANDO DE FONDO */
+.mariposa {
+    position: absolute;
+    width: 26px; height: 20px;
+    background-color: rgba(234, 166, 186, 0.65);
+    clip-path: polygon(50% 40%, 0% 0%, 25% 65%, 50% 55%, 75% 65%, 100% 0%);
+    pointer-events: none; z-index: 1;
+    transform-origin: center;
+    animation: vueloMariposa 7s infinite ease-in-out;
+}
+.m1 { top: 8%; left: 6%; animation-delay: 0s; }
+.m2 { top: 22%; right: 7%; animation-delay: 1.2s; transform: scale(0.7); }
+.m3 { top: 45%; left: 4%; animation-delay: 2.4s; transform: scale(1.1); }
+.m4 { top: 65%; right: 5%; animation-delay: 3.6s; }
+.m5 { bottom: 15%; left: 8%; animation-delay: 4.8s; transform: scale(0.85); }
+.m6 { bottom: 8%; right: 12%; animation-delay: 2s; transform: scale(0.9); }
+
+@keyframes vueloMariposa {
+    0%, 100% { transform: translateY(0) scaleX(1) rotate(-8deg); }
+    50% { transform: translateY(-25px) scaleX(0.35) rotate(18deg); }
+}
+
+/* EFECTO DE EXPLOSIÓN DE MARIPOSAS AL PRESIONAR BOTONES */
+.mariposa-voladora {
+    position: fixed;
+    width: 24px; height: 18px;
+    background-color: #ea6b90;
+    clip-path: polygon(50% 40%, 0% 0%, 25% 65%, 50% 55%, 75% 65%, 100% 0%);
+    pointer-events: none;
+    z-index: 99999;
+    animation: animarExplosionMariposa 1.2s ease-out forwards;
+}
+
+@keyframes animarExplosionMariposa {
+    0% {
+        transform: translate(0, 0) scale(0.5) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) scale(1.4) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* TARJETA iPHONE LIMPIA Y REDONDEADA */
+.tarjeta-pergamino {
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    max-width: 400px; width: 100%;
+    padding: 50px 30px; 
+    border-radius: 36px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+    border: none;
+    text-align: center; display: flex; flex-direction: column; gap: 35px;
+    z-index: 2;
+}
+
+.esquina-floral { display: none; }
+
+/* TEXTOS LIGERAMENTE MÁS GRANDES */
+.nombre-quinceanera { font-family: 'Alex Brush', cursive; font-size: 82px; color: #ce577d; line-height: 1; }
+.decoracion-lineal { width: 45px; height: 1px; background-color: #e6d3a3; margin: 10px auto; }
+
+.frase-bienvenida { 
+    font-size: 15.5px; /* Letra más grande y legible */
+    line-height: 1.8; 
+    font-style: italic; 
+    color: #5e5052; 
+    font-weight: 600; 
+    z-index: 2; 
+}
+
+.contenedor-fecha-borde {
+    border: 1px solid rgba(230, 211, 163, 0.5);
+    border-radius: 24px;
+    padding: 22px 10px;
+    margin: 0 auto;
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 2;
+}
+
+.seccion-fecha { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.txt-sabado { font-size: 13px; letter-spacing: 4px; color: #4a3e40; font-weight: 500; }
+.linea-fecha { width: 100px; height: 1px; background-color: #e6d3a3; }
+.txt-numero-fecha { font-size: 56px; font-weight: 300; color: #ce577d; line-height: 1; }
+.txt-mes-ano { font-size: 12px; letter-spacing: 3px; color: #4a3e40; font-weight: 500; }
+
+.bloque-ubicacion { display: flex; flex-direction: column; align-items: center; z-index: 2; }
+.icono-google { width: 24px; height: 24px; filter: invert(47%) sepia(21%) saturate(1067%) hue-rotate(314deg) brightness(89%) contrast(85%); margin-bottom: 8px; }
+.titulo-seccion { font-size: 12px; letter-spacing: 3px; color: #bca055; font-weight: 600; }
+.detalles-texto { font-size: 14.5px; color: #5e5052; line-height: 1.6; margin-top: 6px; }
+.btn-maps {
+    display: inline-block; margin-top: 15px; padding: 12px 26px;
+    border: 1px solid #ce577d; color: #ce577d; text-decoration: none;
+    font-size: 12px; letter-spacing: 2px; font-weight: 600; border-radius: 20px;
+    transition: all 0.3s ease;
+}
+.btn-maps:hover { background-color: #ce577d; color: #ffffff; }
+
+.seccion-contador { background-color: #faf4f5; padding: 22px 10px; border-radius: 24px; z-index: 2; }
+.titulo-contador { font-size: 12px; letter-spacing: 3px; color: #4a3e40; font-weight: 600; margin-bottom: 12px; }
+.reloj-contador { display: flex; justify-content: center; align-items: center; gap: 8px; }
+.bloque-tiempo { display: flex; flex-direction: column; align-items: center; }
+.bloque-tiempo span { font-size: 30px; font-weight: 300; color: #ce577d; }
+.bloque-tiempo small { font-size: 10px; color: #8a7375; text-transform: uppercase; }
+.separador { font-size: 22px; color: #f0c1cd; margin-bottom: 12px; }
+
+.txt-interactuar { font-size: 11px; letter-spacing: 2px; color: #bca055; font-weight: 600; }
+.contenedor-botones-circulares { display: flex; justify-content: space-around; margin-top: -10px; z-index: 2; }
+.item-circular { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.btn-circular {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 1px solid #f3d2dc; background-color: #ffffff;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 4px 12px rgba(245, 176, 197, 0.15);
+    cursor: pointer; transition: all 0.3s ease;
+}
+.btn-circular img {
+    width: 20px; height: 20px;
+    filter: invert(47%) sepia(21%) saturate(1067%) hue-rotate(314deg) brightness(89%) contrast(85%);
+}
+.btn-circular:hover { transform: translateY(-3px); background-color: #faf4f5; }
+.item-circular span { font-size: 12px; color: #4a3e40; font-weight: 500; }
+
+.modal-pestaana {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    display: none; justify-content: center; align-items: center;
+    z-index: 10000; opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.modal-pestaana.activo { opacity: 1; }
+
+.contenido-modal {
+    background-color: #ffffff;
+    max-width: 350px; width: 85%;
+    padding: 40px 24px; border-radius: 28px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    text-align: center; position: relative;
+    transform: translateY(30px);
+    transition: transform 0.3s ease;
+}
+.modal-pestaana.activo .contenido-modal { transform: translateY(0); }
+
+.btn-cerrar-modal {
+    position: absolute; top: 14px; right: 18px;
+    background: none; border: none; font-size: 26px;
+    color: #8a7375; cursor: pointer; line-height: 1;
+}
+.icono-modal-vestimenta {
+    width: 32px; height: 32px; margin-bottom: 10px;
+    filter: invert(47%) sepia(21%) saturate(1067%) hue-rotate(314deg) brightness(89%) contrast(85%);
+}
+.contenido-modal h2 { font-size: 15px; letter-spacing: 3px; color: #4a3e40; font-weight: 600; }
+.tipo-gala { font-size: 17px; letter-spacing: 1px; color: #ce577d; font-weight: 600; margin-bottom: 15px; }
+.detalles-vestimenta { font-size: 14px; color: #5e5052; line-height: 1.6; }
+.nota-color { font-size: 12px; font-style: italic; color: #bca055; font-weight: 500; display: block; margin-top: 10px; }
+
+.bloque-foto-texto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 2;
+}
+
+.marco-foto-individual {
+    background: #ffffff;
+    padding: 10px 10px 20px 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(230, 211, 163, 0.4);
+    width: 200px;
+    transform: rotate(-2deg);
+    transition: transform 0.3s ease;
+}
+
+.bloque-foto-texto:nth-child(even) .marco-foto-individual {
+    transform: rotate(2deg);
+}
+
+.marco-foto-individual img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+.marco-foto-individual:hover {
+    transform: scale(1.03) rotate(0deg);
+}
